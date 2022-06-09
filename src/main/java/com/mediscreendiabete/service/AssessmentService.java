@@ -136,11 +136,11 @@ public class AssessmentService implements IAssessment {
       return age;
   }
 
-	@Override
+	/*@Override
 	public String assessPatientHealth(int patientId) {
 		
 		return null;
-	}
+	}*/
 	
 	public String measureRiskLevel(int age, int trigger, String sex) {
 		String diabeteRiskLevel = RiskLevelConstant.NONE.getRiskLevel();

@@ -16,6 +16,6 @@ public interface IAssessment {
 	
 	public Optional<Patient> getPatient(String firstName, String lastName);
 	
-	String assessPatientHealth(int patientId);
+	//String assessPatientHealth(int patientId);
 
 }
