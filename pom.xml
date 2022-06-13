@@ -34,10 +34,45 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.8.5</version>
+			<type>maven-plugin</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-surefire-plugin</artifactId>
+			<version>3.0.0-M4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-project-info-reports-plugin</artifactId>
+			<version>3.1.2</version>
+			<type>maven-plugin</type>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<!--<scope>test</scope>-->
+			<exclusions>
+				<exclusion>
+				<groupId>org.junit.vintage</groupId>
+				<artifactId>junit-vintage-engine</artifactId>
+				</exclusion> 
+			</exclusions>
+			
 		</dependency>
+		<dependency>
+	        <groupId>org.junit.jupiter</groupId>
+	        <artifactId>junit-jupiter-api</artifactId>
+	        <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.junit.jupiter</groupId>
+	        <artifactId>junit-jupiter-engine</artifactId>
+	        
+	        <scope>test</scope>
+	    </dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -56,8 +91,117 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.9.0</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>none</exclude>
+							</excludes>
+							<includes>
+								<include>**/*Test.java</include>
+								<include>**/*IT.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M4</version>
+				<configuration>
+					<reuseForks>false</reuseForks>
+					<forkCount>1</forkCount>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*IT.java</include>
+					</includes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>3.0.0-M4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.2</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>checkstyle</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<configLocation>${basedir}/checkstyle-checker.xml</configLocation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<excludes>
+						<exclude>**/*Patient.class</exclude>
+						<exclude>**/*Response.class</exclude>
+						<exclude>**/*Note.class</exclude>
+						<exclude>**/*DiabeteAssess.class</exclude>
+						<exclude>**/*DiabeteTrigger.class</exclude>
+						<exclude>**/*RiskLevelConstant.class</exclude>
+						<exclude>**/*MediscreendiabeteApplication.class</exclude>
+					</excludes>
+
+				</configuration>
+
+			</plugin>
+		</plugins>
+	</reporting>
 
 </project>

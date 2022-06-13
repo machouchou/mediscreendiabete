@@ -43,6 +43,7 @@ public class DiabeteController {
 
 	@GetMapping(value = "/assess")
 	public DiabeteAssess assessPatientHealth(@RequestParam int patientId) {
+		logger.info("retrieve patient level risk");
 		return assessmentService.getdiabeteAssess(patientId);
 	}
 	

@@ -1,6 +1,5 @@
 package com.mediscreendiabete.service;
 
-import java.io.Console;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -39,10 +38,11 @@ public class AssessmentService implements IAssessment {
 
 	@Override
 	public DiabeteAssess getdiabeteAssess(int patientId) {
-		
+		logger.debug("retrieve patient risk level");
 		ResponseEntity<Response<Patient>> patient = getPatient(patientId);
 		
 		Patient pt = patient.getBody().getData();
+		
         List<Note> patientNotes = getPatientNotes(patientId);
         
         int patientAge = getAge(pt.getBirthDate());
@@ -67,7 +67,7 @@ public class AssessmentService implements IAssessment {
 	      		.allOf(DiabeteTrigger.class);
 	      StringBuilder patientNotes = new StringBuilder(512);
 	        for (Note note : notes) {
-	        	patientNotes.append(note.getNote());
+	        	patientNotes.append(note.getNote().toUpperCase());
 				patientNotes.append(" ");
 			}
 	        String noteRecap = patientNotes.toString();
@@ -143,25 +143,26 @@ public class AssessmentService implements IAssessment {
 	}*/
 	
 	public String measureRiskLevel(int age, int trigger, String sex) {
+		logger.debug("risk level calculate");
 		String diabeteRiskLevel = RiskLevelConstant.NONE.getRiskLevel();
 		
-		if ((sex == "M" && age < 30 && trigger == 5)
-				||(sex == "F" && age < 30 && trigger == 7)
+		if ((sex.equals("M") && age < 30 && trigger >= 5)
+				||(sex.equals("F") && age < 30 && trigger >= 7)
 				|| (age > 30 && trigger >= 8)) {
 			
-			diabeteRiskLevel = RiskLevelConstant.EARLYONSET.getRiskLevel();
+			return diabeteRiskLevel = RiskLevelConstant.EARLYONSET.getRiskLevel();
 			
 		} else
-			if ((sex == "M" && age < 30 && trigger == 3)
-				||(sex == "F" && age < 30 && trigger == 4)
-				|| (age > 30 && trigger == 6)) {
+			if ((sex.equals("M") && age < 30 && trigger >= 3)
+				||(sex.equals("F") && age < 30 && trigger >= 4)
+				|| (age > 30 && trigger >= 6)) {
 				
-				diabeteRiskLevel = RiskLevelConstant.DANGER.getRiskLevel();
+				return diabeteRiskLevel = RiskLevelConstant.DANGER.getRiskLevel();
 				
 			} else
-				if ( age >= 30 && trigger == 2) {
+				if ( age >= 30 && trigger >= 2) {
 					
-					diabeteRiskLevel = RiskLevelConstant.BORDERLINE.getRiskLevel();
+					return diabeteRiskLevel = RiskLevelConstant.BORDERLINE.getRiskLevel();
 					
 				}  
 				return diabeteRiskLevel;
