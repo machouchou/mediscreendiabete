@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -68,7 +70,7 @@ public class DiabeteTest {
 	}
 	
 	@Test
-	void test_getPatientNotes() throws Exception {
+	void getPatientNotesTest() throws Exception {
 		//ARRANGE:
 		note1 = new Note("mongoid1", 1, "note1 fumeur, cholestero");
 		note2 = new Note("mongoid2", 1, "note2 Anticorps, vertige, fatigue");
@@ -80,29 +82,50 @@ public class DiabeteTest {
 		assertNotEquals(Collections.EMPTY_LIST, listPatientNote.size());
 	}
 	
-	/*@Test
+	@Test
 	void getAgeTest() {
-		LocalDate currentDate = LocalDate.now();
-		String birthDate = ("1990- 08-28");
-	      int age = Period.between(birthDate, currentDate).getYears();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		  String date = "2016-08-16";
+
+		  //convert String to LocalDate
+		  LocalDate birthDate = LocalDate.parse(date, formatter);
+
+	      int age = Period.between(birthDate, LocalDate.now()).getYears();
 	      
-	}*/
-	/*@Test
-	void test_diabeteAssess_MaleInf30Years5Triggers() throws Exception {
+	      assertEquals(5, assessmentService.getAge(birthDate));
+	      
+	}
+	
+	@Test
+	void getPatientTriggersTest() {
+		
+		note1 = new Note("mongoid1", 1, "note1 fumeur, cholestérol, Microalbumine");
+		note2 = new Note("mongoid2", 1, "note2 Anticorps, vertige, Rechute");
+		listPatientNote.add(note1);
+		listPatientNote.add(note2);
+				
+		//String noteRecap = listPatientNote.toString().toUpperCase();
+		  	      
+	      assertEquals(6, assessmentService.getPatientTriggers(listPatientNote));
+	      
+	}
+	@Test
+	void getDiabeteAssessTest() throws Exception {
 		//ARRANGE:
-		Patient patient1 = new Patient(1, "firstname", "lastname", LocalDate.now().minusYears(22), "M", "address1", "111-222-333");
-		note1 = new Note("mongoid1", 1, "note1 fumeur, cholestero");
+		Patient patient1 = new Patient(1, "firstname", "lastname", LocalDate.now().minusYears(29), "F", "address1", "111-222-333");
+		note1 = new Note("mongoid1", 1, "note1 fumeur, cholestérol, Réaction, Taille");
 		note2 = new Note("mongoid2", 1, "note2 Anticorps, vertige, fatigue");
 		listPatientNote.add(note1);
 		listPatientNote.add(note2);
-		//when(mediscreenProxy.getPatientById(1)).thenReturn(patient1);
-		when(mediscreenNoteProxy.getAllPatientNote(1)).thenReturn(listPatientNote);		
-
-		//ACT:
-		DiabeteAssess result = assessmentService.getdiabeteAssess(1);
-
+				
+		int patientAge = assessmentService.getAge(patient1.getBirthDate());
+		
+		int patientTriggers = assessmentService.getPatientTriggers(listPatientNote);
+		
+		String diabeteRiskLevel = "EARLYONSET : apparition précoce";
+		
 		//ASSERT:
-		assertEquals("Patient: firstname lastname (age 22) diabetes assessment is: Early onset", result);
-	}*/
+		assertEquals("EARLYONSET : apparition précoce", diabeteRiskLevel);
+	}
 
 }

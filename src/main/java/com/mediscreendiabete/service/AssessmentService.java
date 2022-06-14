@@ -136,12 +136,6 @@ public class AssessmentService implements IAssessment {
       return age;
   }
 
-	/*@Override
-	public String assessPatientHealth(int patientId) {
-		
-		return null;
-	}*/
-	
 	public String measureRiskLevel(int age, int trigger, String sex) {
 		logger.debug("risk level calculate");
 		String diabeteRiskLevel = RiskLevelConstant.NONE.getRiskLevel();

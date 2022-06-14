@@ -2,10 +2,10 @@ package com.mediscreendiabete.utility;
 
 public enum RiskLevelConstant {
 	
-	NONE("aucun risque"),
-    BORDERLINE("risque limité"),
+	NONE("NONE : aucun risque"),
+    BORDERLINE("BORDERLINE : risque limité"),
     DANGER("danger"),
-    EARLYONSET("apparition précoce");
+    EARLYONSET("EARLYONSET : apparition précoce");
 
 	private String riskLevel;
 	
